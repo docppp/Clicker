@@ -2,6 +2,9 @@ import datetime
 
 
 class WAIT:
+    """
+    Class with constant variables, so no magic number is necessary
+    """
     __slots__ = ()
     PRECISION_THRESHOLD = 3
     HOUR = 1
