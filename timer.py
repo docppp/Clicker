@@ -1,4 +1,5 @@
 import datetime
+from time import sleep
 
 
 class WAIT:
@@ -63,6 +64,18 @@ class Timer:
         t._timeout = timeout.time()
         return t
 
+    def waitForTimeout(self):
+        try:
+            while self.getWaitTime() == WAIT.MIN:
+                sleep(60)
+            while self.getWaitTime() == WAIT.SEC:
+                sleep(1)
+            while 1:
+                if self._getDeltaTime() < datetime.timedelta():
+                    return True
+        except Exception:
+            return False
+
     def getWaitTime(self):
         """
         Check for how much time Timer should sleep before next check
@@ -91,6 +104,3 @@ class Timer:
         if m > 0 or (m == 0 and s > WAIT.PRECISION_THRESHOLD):
             return WAIT.SEC
         return WAIT.USEC
-
-
-

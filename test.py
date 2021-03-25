@@ -60,6 +60,10 @@ class TestTimer(unittest.TestCase):
             self.getWaitTime(0, -1, 0, 0, WAIT.USEC)
             self.getWaitTime(-1, 0, 0, 0, WAIT.USEC)
 
+    def test_waitForTimeout(self):
+        """Passed here due to time dilatation. Tested in testrealtime.py"""
+        pass
+
     def test_IDC(self):
         self.assertTrue(Timer.IDC)
 
