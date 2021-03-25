@@ -25,9 +25,9 @@ class TestTimer(unittest.TestCase):
             Timer.fromClock(24, 0, 0, 0)
 
     def test_fromDuration(self):
-        d_hour = -3
-        d_min = 2137
-        d_sec = 99
+        d_hour = 21
+        d_min = 37
+        d_sec = 59
         d_usec = 100
         timer = Timer.fromDuration(d_hour, d_min, d_sec, d_usec)
         now = datetime.datetime.now()
@@ -40,24 +40,25 @@ class TestTimer(unittest.TestCase):
         self.assertEqual(s, s2)
         self.assertEqual(u, u2)  # This is kind of danger due to time needed to perform the test
 
-    def checkWaitTime(self, h, m, s, u, ret):
+    def getWaitTime(self, h, m, s, u, ret):
         timer = Timer.fromDuration(h, m, s, u)
         self.assertEqual(ret, timer.getWaitTime())
 
     def test_getWaitTime(self):
-        self.checkWaitTime(2, 20, 3, 300, 'm')
-        self.checkWaitTime(0, 20, 3, 300, 'm')
-        self.checkWaitTime(0, 2, 3, 300, 's')
-        self.checkWaitTime(0, 0, 30, 300, 's')
-        self.checkWaitTime(0, 0, 4, 300, 's')
-        self.checkWaitTime(0, 0, 3, 300, 'u')
-        self.checkWaitTime(0, 0, 0, 300, 'u')
+        from timer import WAIT
+        self.getWaitTime(2, 20, 3, 300, WAIT.MIN)
+        self.getWaitTime(0, 20, 3, 300, WAIT.MIN)
+        self.getWaitTime(0, 2, 3, 300, WAIT.SEC)
+        self.getWaitTime(0, 0, 30, 300, WAIT.SEC)
+        self.getWaitTime(0, 0, 4, 300, WAIT.SEC)
+        self.getWaitTime(0, 0, 3, 300, WAIT.USEC)
+        self.getWaitTime(0, 0, 0, 300, WAIT.USEC)
         with self.assertRaises(ValueError):
-            self.checkWaitTime(0, 0, 0, 0, 'u')
-            self.checkWaitTime(0, 0, 0, -1, 'u')
-            self.checkWaitTime(0, 0, -1, 0, 'u')
-            self.checkWaitTime(0, -1, 0, 0, 'u')
-            self.checkWaitTime(-1, 0, 0, 0, 'u')
+            self.getWaitTime(0, 0, 0, 0, WAIT.USEC)
+            self.getWaitTime(0, 0, 0, -1, WAIT.USEC)
+            self.getWaitTime(0, 0, -1, 0, WAIT.USEC)
+            self.getWaitTime(0, -1, 0, 0, WAIT.USEC)
+            self.getWaitTime(-1, 0, 0, 0, WAIT.USEC)
 
     def test_IDC(self):
         self.assertTrue(Timer.IDC)
