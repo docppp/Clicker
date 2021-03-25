@@ -3,6 +3,7 @@ import datetime
 
 class WAIT:
     __slots__ = ()
+    PRECISION_THRESHOLD = 3
     HOUR = 1
     MIN = 2
     SEC = 3
@@ -82,9 +83,9 @@ class Timer:
     @staticmethod
     def _checkInterval(delta):
         h, m, s, u = map(int, str(delta).replace('.', ':').split(':'))
-        if h > 0 or (h == 0 and m > 3):
+        if h > 0 or (h == 0 and m > WAIT.PRECISION_THRESHOLD):
             return WAIT.MIN
-        if m > 0 or (m == 0 and s > 3):
+        if m > 0 or (m == 0 and s > WAIT.PRECISION_THRESHOLD):
             return WAIT.SEC
         return WAIT.USEC
 
