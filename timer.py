@@ -22,3 +22,29 @@ class Timer:
         t._timeout = timeout.time()
         return t
 
+    def getWaitTime(self):
+        delta = self._getDeltaTime()
+        if delta < datetime.timedelta():
+            raise ValueError("Timer error, event should happened in the past")
+        return self._checkInterval(delta)
+
+    def _getDeltaTime(self):
+        now = datetime.datetime.now().time()
+        start = datetime.datetime(Timer.IDC, Timer.IDC, Timer.IDC, now.hour,
+                                  now.minute, now.second, now.microsecond)
+        stop = datetime.datetime(Timer.IDC, Timer.IDC, Timer.IDC, self._timeout.hour,
+                                 self._timeout.minute, self._timeout.second, self._timeout.microsecond)
+        delta = stop - start
+        return delta
+
+    @staticmethod
+    def _checkInterval(delta):
+        h, m, s, u = map(int, str(delta).replace('.', ':').split(':'))
+        if h > 0 or (h == 0 and m > 3):
+            return 'm'
+        if m > 0 or (m == 0 and s > 3):
+            return 's'
+        return 'u'
+
+
+

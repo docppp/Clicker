@@ -40,6 +40,25 @@ class TestTimer(unittest.TestCase):
         self.assertEqual(s, s2)
         self.assertEqual(u, u2)  # This is kind of danger due to time needed to perform the test
 
+    def checkWaitTime(self, h, m, s, u, ret):
+        timer = Timer.fromDuration(h, m, s, u)
+        self.assertEqual(ret, timer.getWaitTime())
+
+    def test_getWaitTime(self):
+        self.checkWaitTime(2, 20, 3, 300, 'm')
+        self.checkWaitTime(0, 20, 3, 300, 'm')
+        self.checkWaitTime(0, 2, 3, 300, 's')
+        self.checkWaitTime(0, 0, 30, 300, 's')
+        self.checkWaitTime(0, 0, 4, 300, 's')
+        self.checkWaitTime(0, 0, 3, 300, 'u')
+        self.checkWaitTime(0, 0, 0, 300, 'u')
+        with self.assertRaises(ValueError):
+            self.checkWaitTime(0, 0, 0, 0, 'u')
+            self.checkWaitTime(0, 0, 0, -1, 'u')
+            self.checkWaitTime(0, 0, -1, 0, 'u')
+            self.checkWaitTime(0, -1, 0, 0, 'u')
+            self.checkWaitTime(-1, 0, 0, 0, 'u')
+
     def test_IDC(self):
         self.assertTrue(Timer.IDC)
 
