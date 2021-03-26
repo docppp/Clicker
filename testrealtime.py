@@ -9,7 +9,7 @@ class Clock:
         self.minute = minute
         self.second = second
         self.microsecond = microsecond
-        self.precision = 1000 * 100
+        self.precision = 1000 * 10
 
     def set_precision(self, value):
         self.precision = value
@@ -80,7 +80,7 @@ def getDelta(future, now):
 
 
 def test():
-    print("Mock test (1h, 31min, 10sec, 50000us...")
+    print("Mock test (1h, 31min, 10sec, 50000us)...")
     clock = Clock(12, 0, 0, 0)
     mock_timer = MockTimer.fromClock(13, 31, 10, 50000)
     mock_timer.useClock(clock)

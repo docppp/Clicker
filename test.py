@@ -1,4 +1,6 @@
-import unittest, datetime
+import datetime
+import unittest
+
 from timer import Timer
 
 
