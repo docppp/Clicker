@@ -7,7 +7,7 @@ class WAIT:
     Class with constant variables, so no magic number is necessary
     """
     __slots__ = ()
-    PRECISION_THRESHOLD = 3
+    PRECISION_THRESHOLD = 0
     HOUR = 1
     MIN = 2
     SEC = 3
@@ -65,16 +65,24 @@ class Timer:
         return t
 
     def waitForTimeout(self):
+        """
+        :return: True when given time elapses, false if interrupted
+        """
         try:
             while self.getWaitTime() == WAIT.MIN:
-                sleep(60)
+                self._timerSleep(60)
             while self.getWaitTime() == WAIT.SEC:
-                sleep(1)
+                self._timerSleep(1)
             while 1:
-                if self._getDeltaTime() < datetime.timedelta():
+                if self._getDeltaTime() < datetime.timedelta.resolution:
                     return True
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
+
+    @staticmethod
+    def _timerSleep(time):
+        sleep(time)
 
     def getWaitTime(self):
         """
