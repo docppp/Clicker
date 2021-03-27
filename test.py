@@ -3,6 +3,7 @@ import unittest
 
 from timer import Timer
 from events import Event, MouseEvent, TimeEvent
+from scripts import ScriptManager
 
 
 class TestTimer(unittest.TestCase):
@@ -80,6 +81,25 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(e._y, 2)
         self.assertIsNone(Event.createEvent(Timer))
 
+
+class TestScriptManager(unittest.TestCase):
+
+    def test_addEvent(self):
+        s = ScriptManager()
+        # as in temple
+        self.assertTrue(s.addEvent("test;x=str;y=10;z=abc;ff=10.0"))
+        # other order
+        self.assertTrue(s.addEvent("test;ff=10.0;x=str;z=abc;y=10"))
+        # int can be str
+        self.assertTrue(s.addEvent("test;ff=0;x=0;z=0;y=0"))
+        # wrong type
+        self.assertFalse(s.addEvent("test;x=str;y=10;z=abc;ff=str"))
+        # missing arg
+        self.assertFalse(s.addEvent("test;ff=10.0;x=str;z=abc"))
+        # doubled arg
+        self.assertFalse(s.addEvent("test;ff=0;x=0;z=0;y=0;ff=0"))
+        # corrupted
+        self.assertFalse(s.addEvent("test;ff===0;;=;0;=;;y=0;f;f=0"))
 
 if __name__ == '__main__':
     unittest.main()
