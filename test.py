@@ -2,6 +2,7 @@ import datetime
 import unittest
 
 from timer import Timer
+from events import Event, MouseEvent, TimeEvent
 
 
 class TestTimer(unittest.TestCase):
@@ -50,10 +51,10 @@ class TestTimer(unittest.TestCase):
         from timer import WAIT
         self.getWaitTime(2, 20, 3, 300, WAIT.MIN)
         self.getWaitTime(0, 20, 3, 300, WAIT.MIN)
-        self.getWaitTime(0, 2, 3, 300, WAIT.SEC)
+        self.getWaitTime(0, 2, 3, 300, WAIT.MIN)
         self.getWaitTime(0, 0, 30, 300, WAIT.SEC)
         self.getWaitTime(0, 0, 4, 300, WAIT.SEC)
-        self.getWaitTime(0, 0, 3, 300, WAIT.USEC)
+        self.getWaitTime(0, 0, 3, 300, WAIT.SEC)
         self.getWaitTime(0, 0, 0, 300, WAIT.USEC)
         with self.assertRaises(ValueError):
             self.getWaitTime(0, 0, 0, 0, WAIT.USEC)
@@ -68,6 +69,16 @@ class TestTimer(unittest.TestCase):
 
     def test_IDC(self):
         self.assertTrue(Timer.IDC)
+
+
+class TestEvent(unittest.TestCase):
+
+    def test_createEvent(self):
+        e = Event.createEvent(MouseEvent, 1, 2)
+        self.assertTrue(isinstance(e, MouseEvent))
+        self.assertEqual(e._x, 1)
+        self.assertEqual(e._y, 2)
+        self.assertIsNone(Event.createEvent(Timer))
 
 
 if __name__ == '__main__':
