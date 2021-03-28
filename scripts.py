@@ -23,6 +23,14 @@ class ScriptManager:
         except FileNotFoundError:
             return False
 
+    def saveScript(self, script_path):
+        try:
+            with open(script_path, 'x') as file:
+                file.writelines([f'{str(e)}\n' for e in self.eventList])
+                return True
+        except FileExistsError:
+            return False
+
     def run(self):
         for e in self.eventList:
             e.process()
