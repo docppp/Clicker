@@ -13,9 +13,21 @@ class ScriptManager:
         self.name = "script"
         self.eventList = []
 
-    def addEvent(self, event_string):
+    def loadScript(self, script_path):
+        try:
+            with open(script_path, 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    if not self.addEvent(line):
+                        return False
+        except FileNotFoundError:
+            return False
+
+    def addEvent(self, event_string: str) -> bool:
         if self._validateEventString(event_string):
             self.eventList.append(self._createEvent(event_string))
+            return True
+        return False
 
     @staticmethod
     def _validateEventString(event_string: str) -> bool:
