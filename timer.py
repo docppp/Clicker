@@ -24,6 +24,7 @@ class Timer:
 
     def __init__(self):
         self._timeout = datetime.datetime.now().time()
+        self._type = None
 
     @classmethod
     def fromClock(cls, hour=0, minute=0, second=0, microsecond=0):
@@ -36,6 +37,7 @@ class Timer:
         """
         t = Timer()
         t._timeout = t._timeout.replace(hour, minute, second, microsecond)
+        t._type = 'clock'
         return t
 
     @classmethod
@@ -59,15 +61,19 @@ class Timer:
             raise ValueError("Zero time value.")
 
         t = Timer()
-        now = datetime.datetime.now()
-        timeout = now + datetime.timedelta(hours=hour, minutes=minute, seconds=second, microseconds=microsecond)
-        t._timeout = timeout.time()
+
+        timeout = datetime.timedelta(hours=hour, minutes=minute, seconds=second, microseconds=microsecond)
+        t._timeout = timeout
+        t._type = 'duration'
         return t
 
     def waitForTimeout(self):
         """
         :return: True when given time elapses, false if interrupted
         """
+        if self._type == 'duration':
+            now = datetime.datetime.now()
+            self._timeout = (now + self._timeout).time()
         try:
             while self.getWaitTime() == WAIT.MIN:
                 self._timerSleep(60)
@@ -99,8 +105,12 @@ class Timer:
         now = datetime.datetime.now().time()
         start = datetime.datetime(Timer.IDC, Timer.IDC, Timer.IDC, now.hour,
                                   now.minute, now.second, now.microsecond)
+
+        u = self._timeout.microsecond if self._timeout.microsecond != now.microsecond \
+            else (self._timeout.microsecond + 1) % 1000000
+
         stop = datetime.datetime(Timer.IDC, Timer.IDC, Timer.IDC, self._timeout.hour,
-                                 self._timeout.minute, self._timeout.second, self._timeout.microsecond)
+                                 self._timeout.minute, self._timeout.second, u)
         delta = stop - start
         return delta
 

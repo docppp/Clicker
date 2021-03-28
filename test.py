@@ -37,7 +37,7 @@ class TestTimer(unittest.TestCase):
         now = datetime.datetime.now()
         future = datetime.timedelta(hours=d_hour, minutes=d_min, seconds=d_sec, microseconds=d_usec)
         timeout = (now + future).time()
-        h, m, s, u = timer._timeout.strftime('%H %M %S %f').split(' ')
+        h, m, s, u = (now + timer._timeout).strftime('%H %M %S %f').split(' ')
         h2, m2, s2, u2 = timeout.strftime('%H %M %S %f').split(' ')
         self.assertEqual(h, h2)
         self.assertEqual(m, m2)
@@ -46,6 +46,7 @@ class TestTimer(unittest.TestCase):
 
     def getWaitTime(self, h, m, s, u, ret):
         timer = Timer.fromDuration(h, m, s, u)
+        timer._timeout = (datetime.datetime.now() + timer._timeout).time()
         self.assertEqual(ret, timer.getWaitTime())
 
     def test_getWaitTime(self):
