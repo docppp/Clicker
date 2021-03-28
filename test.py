@@ -105,6 +105,11 @@ class TestScriptManager(unittest.TestCase):
         e = ScriptManager._createEvent("mouse;y=100;x=50")
         self.assertEqual(e._x, 50)
         self.assertEqual(e._y, 100)
+        e = ScriptManager._createEvent("time;t=clock;h=12;m=0;s=30;u=500")
+        self.assertEqual(e._timer._timeout.hour, 12)
+        self.assertEqual(e._timer._timeout.minute, 0)
+        self.assertEqual(e._timer._timeout.second, 30)
+        self.assertEqual(e._timer._timeout.microsecond, 500)
 
 
 if __name__ == '__main__':
