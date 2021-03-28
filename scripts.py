@@ -23,6 +23,10 @@ class ScriptManager:
         except FileNotFoundError:
             return False
 
+    def run(self):
+        for e in self.eventList:
+            e.process()
+
     def addEvent(self, event_string: str) -> bool:
         if self._validateEventString(event_string):
             self.eventList.append(self._createEvent(event_string))

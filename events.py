@@ -1,5 +1,8 @@
-from timer import Timer
+import datetime
 import pyautogui
+
+from timer import Timer
+
 pyautogui.PAUSE = 0
 
 
@@ -26,6 +29,8 @@ class MouseEvent(Event):
         self._y = y
 
     def process(self):
+        now = datetime.datetime.now().time()
+        print(f'[{now}] Mouse clicked at x={self._x} y={self._y}')
         pyautogui.click(self._x, self._y)
 
     def __str__(self):
@@ -49,6 +54,9 @@ class TimeEvent(Event):
             raise ValueError("Invalid timer type.")
 
     def process(self):
+        t = 'until systime' if self._type == 'clock' else 'for'
+        now = datetime.datetime.now().time()
+        print(f'[{now}] Timer waits {t} {self._h:02d}:{self._m:02d}:{self._s:02d}.{self._us:06d}')
         self._timer.waitForTimeout()
 
     def __str__(self):
