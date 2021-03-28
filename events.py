@@ -28,11 +28,19 @@ class MouseEvent(Event):
     def process(self):
         pyautogui.click(self._x, self._y)
 
+    def __str__(self):
+        return f'mouse;x={self._x};y={self._y}'
+
 
 class TimeEvent(Event):
 
     def __init__(self, timer_type, hour, minute, second, microsecond):
         super().__init__()
+        self._type = timer_type
+        self._h = hour
+        self._m = minute
+        self._s = second
+        self._us = microsecond
         if timer_type == 'clock':
             self._timer = Timer.fromClock(hour, minute, second, microsecond)
         elif timer_type == 'duration':
@@ -42,3 +50,6 @@ class TimeEvent(Event):
 
     def process(self):
         self._timer.waitForTimeout()
+
+    def __str__(self):
+        return f'time;t={self._type};h={self._h};m={self._m};s={self._s};u={self._us}'

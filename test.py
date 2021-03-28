@@ -100,6 +100,11 @@ class TestScriptManager(unittest.TestCase):
         self.assertFalse(s._validateEventString("test;ff=0;x=0;z=0;y=0;ff=0"))
         # corrupted
         self.assertFalse(s._validateEventString("test;ff===0;;=;0;=;;y=0;f;f=0"))
+        # from __str__
+        t = TimeEvent('clock', 13, 10, 5, 400)
+        m = MouseEvent(999, 200)
+        self.assertTrue(s._validateEventString(t.__str__()))
+        self.assertTrue(s._validateEventString(m.__str__()))
 
     def test_createEvent(self):
         e = ScriptManager._createEvent("mouse;y=100;x=50")
