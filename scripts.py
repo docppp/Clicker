@@ -1,3 +1,4 @@
+import datetime
 from collections import Counter
 
 from events import Event, MouseEvent, TimeEvent
@@ -10,16 +11,18 @@ class ScriptManager:
                  'test': {'x': str, 'y': int, 'z': str, 'ff': float}}
 
     def __init__(self):
-        self.name = "script"
+        self.name = "unnamed_script"
         self.eventList = []
 
     def loadScript(self, script_path):
+        self.eventList.clear()
         try:
             with open(script_path, 'r') as file:
                 lines = file.readlines()
                 for line in lines:
                     if not self.addEvent(line):
                         return False
+            self.name = script_path
         except FileNotFoundError:
             return False
 
@@ -31,9 +34,12 @@ class ScriptManager:
         except FileExistsError:
             return False
 
-    def run(self):
+    def run(self, dommy=None):
+        print(f'[{datetime.datetime.now().time()}] Script {self.name} start..')
         for e in self.eventList:
             e.process()
+        print(f'[{datetime.datetime.now().time()}] Complete')
+        return True
 
     def addEvent(self, event_string: str) -> bool:
         if self._validateEventString(event_string):
